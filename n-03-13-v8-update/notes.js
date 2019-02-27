@@ -3,48 +3,84 @@ const fs = require('fs');
 const _ = require('lodash');
 const yargs = require('yargs');
 
-var printfz = (...args) =>{
+var printfz = (...args) => {
   var str = ''
-  for(var i = 0; i< args.length-1; i++){
+  for (var i = 0; i < args.length - 1; i++) {
     str += args[i] + ' '
   }
-  if(args.length > 0){
-    str += args[args.length-1];
+  if (args.length > 0) {
+    str += args[args.length - 1];
   }
   console.log(str);
 }
 
+var fetchNote =()=>{
+  try {
+    return JSON.parse(fs.readFileSync('notes-data.json', 'utf8'));
+  } catch (error) {
+    return [];
+  }
+}
+
+var saveNote = (note)=>{
+  fs.writeFileSync('notes-data.json', JSON.stringify(note));
+}
+
 var addNote = function (title, body) {
-  printfz('Adding note: ', title, body );
-  
+  var notes = fetchNote();
+  var note = {
+    title,
+    body
+  }
+  notes.push(note);
+  var duplicate = notes.filter((note)=> note.title === title);
+
+  if(duplicate.length === 0){
+    saveNote(notes);
+    printfz('Note added: ', title, body);
+  }
+
 }
 
-var getAllNote = function(){
-  var obj = JSON.parse(fs.readFileSync('notes-data.json', 'utf8'));
-  for(key in obj){
-    console.log(key +'-', obj[key].title +':', obj[key].body )
-  }
+var getAllNote = function () {
+  var notes = fetchNote();
+  note = {
+    title:"",
+    body:""
+  };
+  notes.forEach((note) => { 
+    console.log('-', note.title + ':', note.body)
+  });
+
 }
 
-var removeNote = function(title){
-  printfz('Removing note: ', title );
-  var obj = JSON.parse(fs.readFileSync('notes-data.json', 'utf8'));
-  var save = false;
-  for(key in obj){
-    if(obj[key].title === title){
-      delete obj[key];
-      save = true;
-    }
-  }
-  if(save){
-     fs.writeFileSync('notes-data.json', JSON.stringify(obj,null, 2));
-  }
-}
 
-var readNote = function(title) {
+
+var removeNote = function (title) {
+  printfz('Removing note: ', title);
+  var notes = fetchNote();
+  var note = {
+    title,
+    body:""
+  };
+
+  var stripedNote = notes.filter((note)=> note.title !== title);
+  if(stripedNote.length !== 0){
+      saveNote(stripedNote);
+  }
+} 
+
+var readNote = function (title) {
   printfz('Reading: ', title);
-  
-}
+  var notes = fetchNote();
+  var note = {
+    title,
+    body:""
+  };
+  var readnote = notes.filter((note)=> note.title === title);
+  printfz(readnote[0].title + ':', readnote[0].body);
+
+} 
 
 module.exports = {
   addNote,

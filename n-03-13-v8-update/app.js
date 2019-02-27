@@ -27,7 +27,7 @@ if(command ==='add'){
   notes.getAllNote();
 }else if(command ==='read'){
   notes.readNote(argv.title)
-}else if(command ==='remove'){
+}else if(command ==='remove'){ 
   notes.removeNote(argv.title);
 }
 else {
