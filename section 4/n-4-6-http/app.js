@@ -1,12 +1,11 @@
 console.log('Starting app.js');
 const _ = require('lodash');
 const yargs = require('yargs');
+const https = require('https');
 
 const geocode = require('./geocode/geocode.js');
 const weather = require('./weather/weather.js');
 
-var lat = '45.466452';
-var long = '-73.4815108';
 
 const argv = yargs
     .options({
@@ -21,14 +20,36 @@ const argv = yargs
     .alias('help', 'h')
     .argv;
 
-geocode.GeocodeAddress(argv.a, (erroMessase, results1)=>{
+    const options = {
+      hostname: 'cnn.com',
+      port: 443,
+      path: '/',
+      method: 'GET'
+    };
+    
+    const req = https.request(options, (res) => {
+      console.log('statusCode:', res.statusCode);
+      console.log('headers:', JSON.stringify(res.headers,undefined,2));
+    
+      res.on('data', (d) => {
+        process.stdout.write(d);
+      });
+    });
+    
+    req.on('error', (e) => {
+      console.error(e);
+    });
+    req.end();
+
+
+/*geocode.GeocodeAddress(argv, (erroMessase, results1)=>{
   if(erroMessase){
     console.log('Error Errror:');
     console.log(erroMessase);
   }else if(results1){
     console.log('Good result:');
     console.log(results1.address);
-    weather.getWeather(results1.latitude, results1.longitude, (erroMessase,results2)=>{
+    weather.getWeather(results1, (erroMessase,results2)=>{
       if(erroMessase){
         console.log('Error Errror:');
         console.log(erroMessase);
@@ -37,4 +58,4 @@ geocode.GeocodeAddress(argv.a, (erroMessase, results1)=>{
       }
     });
   }
-});
+});*/

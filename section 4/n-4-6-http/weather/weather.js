@@ -2,7 +2,7 @@ const request = require('request');
 
 var darkKey = '72db42f9424288cb51da5b57f37eaa33';
 
-var getWeather =(latitude, longitude, callback) => {
+var getWeather =({latitude, longitude}, callback) => {
     request({
     url: `https://api.darksky.net/forecast/${darkKey}/${latitude},${longitude}`,
     json: true

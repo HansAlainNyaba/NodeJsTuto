@@ -1,9 +1,9 @@
 console.log('loading geocode.js');
 const request = require('request');
 
-var GeocodeAddress = (strAddress, callback) => {
+var GeocodeAddress = ({address}, callback) => {
     request({
-        url: `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(strAddress)}&key=AIzaSyDtNIi1Jx303DukwQF3i6vLwTg2IKe1Qjg`,
+        url: `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyDtNIi1Jx303DukwQF3i6vLwTg2IKe1Qjg`,
         json: true
     }, (error, response, body) => {
         if (error) {
