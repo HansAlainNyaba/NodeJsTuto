@@ -44,15 +44,15 @@ app.get('/help', (req, res) => {
 
 app.get('/weather', (req, res) => {
     if(!req.query.address){
-        return res.send('Error... Your location address is missing!')
+        return res.send({error:'Your location address is missing!'})
     }
     geocode(req.query.address,(error, response)=>{
         if(error){
-            return res.send('error message')
+            return res.send(error)
         }else{
             forecast(response,(error, forecastres)=>{
                 if(error){
-                    return res.send('error message')
+                    return res.send(error)
                 }else{
                     response.address = req.query.address
                     response.forecast = forecastres
@@ -60,7 +60,6 @@ app.get('/weather', (req, res) => {
                 }
             })
         }
-
     })
 })
 
